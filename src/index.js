@@ -1,10 +1,13 @@
-const num = [49,85,55,64];
+var page = require('page');
 
-var numMas1 = num.map(function(n){
-    return n +1 ;
+var main = document.getElementById('main-container');
+
+page('/',function(ctx,next){
+    main.innerHTML = 'Home <a href="/signup">Signup <a/>'; 
 })
 
-console.log(numMas1);
+page('/signup',function(ctx, next){
+    main.innerHTML = 'SignUp<a href="/">Home <a/>';
+})
 
-var numMas1Es6 = num.map((n) => n *2);
-console.log(numMas1Es6);
+page();
