@@ -1213,7 +1213,7 @@ page('/', function (ctx, next) {
 });
 
 page('/signup', function (ctx, next) {
-    main.innerHTML = 'SignUp<a href="/">Home <a/>';
+    main.innerHTML = 'SignUp<a href="/">Home<a/>';
 });
 
 page();

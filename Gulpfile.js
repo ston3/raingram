@@ -4,7 +4,8 @@ var gulp = require('gulp'),
     babel = require('babelify'),
     browserify = require('browserify'),
     source = require('vinyl-source-stream'),
-    gbabel = require('gulp-babel');
+    gbabel = require('gulp-babel'),
+    watchify = require('watchify');
 
 gulp.task('styles',function(){
     gulp
@@ -18,17 +19,42 @@ gulp.task('assets', function(){
     gulp
         .src('assets/*')
         .pipe(gulp.dest('public'));
+
 })
 //script with browserify
 
 gulp.task('scripts',function(){
     browserify('./src/index.js')
-        .transform(babel)
-        .bundle()
-        .pipe(source('index.js'))
-        .pipe(rename('app.js'))
-        .pipe(gulp.dest('public'));    
+
+        
 })
 
+function compile(watch){
+    var bundle = watchify(browserify('./src/index.js'));
 
-gulp.task('default',['styles','assets','scripts']);
+    function rebundle(){
+        bundle
+            .transform(babel)
+            .bundle()
+            .pipe(source('index.js'))
+            .pipe(rename('app.js'))
+            .pipe(gulp.dest('public'));    
+    }
+    if(watch){
+        bundle.on('update', function(){
+            console.log('-->Bundling Stone.....');
+            rebundle();
+        })
+    }
+    rebundle();
+}
+
+gulp.task('build',function(){
+    return compile();
+})
+
+gulp.task('watch',function(){
+    return compile(true);
+})
+
+gulp.task('default',['styles','assets','build']);
